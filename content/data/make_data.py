@@ -156,6 +156,7 @@ def main():
     make_days_61_63()
     make_days_64_67()
     make_days_68_70()
+    make_days_78_80()
 
 
 # ---------------------------------------------------------------------------
@@ -1151,6 +1152,41 @@ def make_days_68_70():
     write("carbon_2030_settings.csv", ["setting", "value"], CARBON_2030)
     write("carbon_2030_stress.csv", ["scenario", "growth_per_year", "hvo_max_km_share", "electric_fixed_per_trip"],
           CARBON_2030_STRESS)
+
+
+
+# ---------------------------------------------------------------------------
+# Days 78-80: this week's plan override requests and the approval rules (Day 78); the DC-MTL flood, the recovery
+# options and the doubled internal carbon price (Day 80). Course assumptions.
+# ---------------------------------------------------------------------------
+OVERRIDE_REQUESTS = [
+    ("R1", "Amelie Roy", "store operations", "BK-CR", "at_least", 34, "Montreal stores run out of croissants by 10 am on Saturdays"),
+    ("R2", "Raj Mehta", "planning", "BK-07", "at_least", 8, "Italian festival near S12-S14 this weekend"),
+    ("R3", "Lucie Gagnon", "cafe accounts", "BK-WW", "at_least", 55, "Cafe Laurier asked for extra whole wheat on Friday"),
+    ("R4", "Marc Dube", "bakery", "BK-SD", "at_most", 25, "starter tank cleaning on Thursday"),
+    ("R5", "Priya Shah", "finance", "BK-19", "at_least", 4, "launch promised to the board"),
+    ("R6", "Tom Leblanc", "category management", "BK-12", "at_most", 10, "slow sales in the last two weeks"),
+]
+APPROVAL_RULES = [("automatic", 250, "none"), ("planning lead", 1_000, "Head of Planning"),
+                  ("director", 1_000_000, "Director of Operations")]
+FLOOD_SCENARIOS = [(2, 0.30), (3, 0.45), (4, 0.25)]
+RECOVERY_OPTIONS = [
+    ("laval_temp", "TMP-LAV", 900, 900, 200, 150_000, 18_000, 2, "temporary warehouse in Laval (NEW-LAV lanes)"),
+    ("mis_weekend", "DC-MIS", 350, 350, 80, 0, 12_000, 1, "weekend shifts at Mississauga"),
+    ("ott_weekend", "DC-OTT", 150, 150, 40, 0, 6_000, 1, "weekend shifts at Ottawa"),
+]
+CAPSTONE = [("flood_dc", "DC-MTL"), ("first_week_back_capacity", 0.5), ("inspection_report_week", 2),
+            ("carbon_price_now", 650), ("carbon_price_new", 1_300)]
+
+
+def make_days_78_80():
+    write("override_requests.csv", ["request_id", "requested_by", "team", "sku", "kind", "batches", "reason"],
+          OVERRIDE_REQUESTS)
+    write("approval_rules.csv", ["level", "max_cost_per_week", "approver"], APPROVAL_RULES)
+    write("flood_scenarios.csv", ["weeks_closed", "probability"], FLOOD_SCENARIOS)
+    write("recovery_options.csv", ["option", "dc_id", "extra_receiving", "extra_outbound", "extra_chilled", "setup_cost",
+                                   "weekly_cost", "first_week", "description"], RECOVERY_OPTIONS)
+    write("capstone_settings.csv", ["setting", "value"], CAPSTONE)
 
 
 if __name__ == "__main__":

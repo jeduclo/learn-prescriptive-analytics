@@ -40,34 +40,34 @@ con.close()
 ```
 
 ```text
-┌───────────────────────┬────────┐
-│      table_name       │ n_rows │
-│        varchar        │ int64  │
-├───────────────────────┼────────┤
-│ bakery_current_plan   │      3 │
-│ bakery_disruptions    │      2 │
-│ bakery_investments    │      4 │
-│ bakery_machines       │      8 │
-│ bakery_night_jobs     │     18 │
-│ bakery_operations     │     72 │
-│ bakery_oven_log       │    780 │
-│ bakery_products       │      3 │
-│ bakery_range          │     30 │
-│ bakery_range_forecast │     30 │
-│   ·                   │      · │
-│   ·                   │      · │
-│   ·                   │      · │
-│ stores                │     40 │
-│ stress_scenarios      │      6 │
-│ trip_log              │   1872 │
-│ truck_orders          │     24 │
-│ truck_spec            │      2 │
-│ yule_log_economics    │      5 │
-│ yule_log_forecast     │     40 │
-│ yule_log_history      │    118 │
-│ yule_markdown_days    │      4 │
-│ yule_markdown_prices  │      4 │
-└───────────────────────┴────────┘
+┌──────────────────────┬────────┐
+│      table_name      │ n_rows │
+│       varchar        │ int64  │
+├──────────────────────┼────────┤
+│ approval_rules       │      3 │
+│ bakery_current_plan  │      3 │
+│ bakery_disruptions   │      2 │
+│ bakery_investments   │      4 │
+│ bakery_machines      │      8 │
+│ bakery_night_jobs    │     18 │
+│ bakery_operations    │     72 │
+│ bakery_oven_log      │    780 │
+│ bakery_products      │      3 │
+│ bakery_range         │     30 │
+│   ·                  │      · │
+│   ·                  │      · │
+│   ·                  │      · │
+│ stores               │     40 │
+│ stress_scenarios     │      6 │
+│ trip_log             │   1872 │
+│ truck_orders         │     24 │
+│ truck_spec           │      2 │
+│ yule_log_economics   │      5 │
+│ yule_log_forecast    │     40 │
+│ yule_log_history     │    118 │
+│ yule_markdown_days   │      4 │
+│ yule_markdown_prices │      4 │
+└──────────────────────┴────────┘
 ```
 
 Every CSV becomes a table with the same name (your list grows as later lessons add data). `CREATE OR REPLACE` makes the script safe to rerun.

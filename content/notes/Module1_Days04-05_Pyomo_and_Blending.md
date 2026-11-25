@@ -595,6 +595,11 @@ data/yule_markdown_prices.csv: 4 rows
 data/evening_markdown.csv: 3 rows
 data/carbon_2030_settings.csv: 5 rows
 data/carbon_2030_stress.csv: 4 rows
+data/override_requests.csv: 6 rows
+data/approval_rules.csv: 3 rows
+data/flood_scenarios.csv: 3 rows
+data/recovery_options.csv: 3 rows
+data/capstone_settings.csv: 5 rows
 ```
 
 Later lessons add files to the same script, so your list may be longer than the one above. The first seven files are byte-for-byte the same as before: new data uses its own random stream, so your Days 1–4 results do not change. Rerun `python day01/ladder.py` too: it rewrites `data/forecast_next_week.csv`, which Day 6 needs.
