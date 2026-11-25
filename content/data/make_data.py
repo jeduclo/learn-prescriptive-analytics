@@ -153,6 +153,9 @@ def main():
     make_days_51_53()
     make_days_54_57()
     make_days_58_60()
+    make_days_61_63()
+    make_days_64_67()
+    make_days_68_70()
 
 
 # ---------------------------------------------------------------------------
@@ -1061,6 +1064,93 @@ def make_days_58_60():
     write("mdp_settings.csv", ["setting", "value"], MDP_SETTINGS)
     write("replenishment_scenarios.csv", ["scenario", "demand_factor", "late_supplier", "extra_lead_days"],
           REPLENISHMENT_SCENARIOS)
+
+
+# ---------------------------------------------------------------------------
+# Days 61-63: decision analysis. Renewing DC-MTL's ten store-delivery trucks in 2027: diesel or electric?
+# (All numbers are course assumptions for the fictional Northbound, not market data.)
+# ---------------------------------------------------------------------------
+EV_OPTIONS = [  # option, electric trucks, diesel trucks, chargers (one-time $)
+    ("diesel_renew", 0, 10, 0), ("electric_half", 5, 5, 150_000), ("electric_all", 10, 0, 250_000)]
+EV_SETTINGS = [("km_per_truck_year", 55_000), ("years", 5), ("discount_rate", 0.08),
+               ("diesel_lease_per_year", 38_000), ("electric_lease_per_year", 58_000),
+               ("diesel_maintenance_per_km", 0.18), ("electric_maintenance_per_km", 0.11),
+               ("electricity_per_km", 0.27), ("diesel_co2_kg_per_km", 0.95), ("electric_co2_kg_per_km", 0.10),
+               ("pilot_cost", 60_000), ("diesel_hedge_per_km", 0.80)]
+EV_UNCERTAINTIES = [  # factor, level, probability, value
+    ("winter_range", "good", 0.45, 0), ("winter_range", "fair", 0.35, 7_500), ("winter_range", "poor", 0.20, 22_000),
+    ("diesel_price", "low", 0.30, 0.62), ("diesel_price", "base", 0.50, 0.78), ("diesel_price", "high", 0.20, 0.98)]
+PILOT_SIGNAL = [("good", 0.85), ("fair", 0.45), ("poor", 0.15)]        # P(the pilot reports "range is fine" | range)
+FINANCE = [("annual_revenue", 1_240_000_000), ("net_income", 37_000_000), ("equity", 290_000_000),
+           ("vp_logistics_largest_accepted_gamble", 600_000)]
+OTTAWA_GROWTH = [(0.01, 0.25), (0.03, 0.50), (0.05, 0.25)]
+
+
+def make_days_61_63():
+    write("ev_fleet_options.csv", ["option", "electric_trucks", "diesel_trucks", "chargers_one_time"], EV_OPTIONS)
+    write("ev_settings.csv", ["setting", "value"], EV_SETTINGS)
+    write("ev_uncertainties.csv", ["factor", "level", "probability", "value"], EV_UNCERTAINTIES)
+    write("ev_pilot_signal.csv", ["winter_range", "p_reports_fine"], PILOT_SIGNAL)
+    write("northbound_finance.csv", ["setting", "value"], FINANCE)
+    write("ottawa_growth_scenarios.csv", ["growth_per_year", "probability"], OTTAWA_GROWTH)
+
+
+# ---------------------------------------------------------------------------
+# Days 64-67: a vendor's demo e-truck last February (Bayesian updating), and the delivery network's vehicles,
+# delivery frequencies and chargers for multi-objective planning (cost, CO2, service). Course assumptions.
+# ---------------------------------------------------------------------------
+EV_RANGE = [("theta_good", 0.95), ("theta_fair", 0.85), ("theta_poor", 0.65), ("penalty_per_point", 75_000),
+            ("theta_no_penalty", 0.95), ("cold_day_below_c", -10), ("typical_cold_share", 0.55),
+            ("pilot_cost_per_truck", 30_000), ("pilot_days", 90)]
+VEHICLES = [("diesel", 1.10, 180, 0.95, 9999), ("hvo", 1.32, 180, 0.19, 9999), ("electric", 0.70, 300, 0.10, 240)]
+FREQUENCIES = [(3, 0.048), (4, 0.034), (5, 0.026), (6, 0.022)]
+CHARGERS = [("DC-MIS", 60), ("DC-OTT", 25), ("DC-MTL", 50)]
+NETWORK_CARBON = [("pallets_per_truck", 26), ("current_frequency", 5), ("current_vehicle", "diesel"),
+                  ("target_2030_cut", 0.40), ("hvo_max_km_share", 0.35)]
+
+
+def make_days_64_67():
+    rng = random.Random(2064)
+    write("ev_range_prior.csv", ["setting", "value"], EV_RANGE)
+    rows = []
+    for k in range(30):
+        day = datetime.date(2026, 2, 2) + datetime.timedelta(days=k)
+        temp = round(rng.gauss(-8, 6), 1)
+        ok = rng.random() < (0.72 if temp < -10 else 0.92)
+        rows.append((day.isoformat(), temp, round(rng.uniform(170, 230), 1), int(ok)))
+    write("ev_demo_log.csv", ["demo_date", "min_temp_c", "route_km", "completed_without_charge"], rows)
+    write("fleet_vehicle_types.csv", ["vehicle", "cost_per_km", "fixed_per_trip", "co2_kg_per_km", "max_round_trip_km"],
+          VEHICLES)
+    write("delivery_frequency.csv", ["deliveries_per_week", "stockout_rate"], FREQUENCIES)
+    write("dc_chargers.csv", ["dc_id", "electric_trips_per_week"], CHARGERS)
+    write("network_carbon_settings.csv", ["setting", "value"], NETWORK_CARBON)
+
+
+# ---------------------------------------------------------------------------
+# Days 68-70: price elasticities (as estimated in the Applied Causal Inference course), the yule-log markdown,
+# the evening croissant markdown, and the 2030 delivery network. Course assumptions.
+# ---------------------------------------------------------------------------
+ELASTICITIES = [("bread", -1.6, 0.25), ("viennoiserie", -2.1, 0.30), ("cake", -2.8, 0.45), ("cookie", -2.4, 0.35),
+                ("yule_log", -1.8, 0.30)]
+PRICE_LADDER = [(-0.10,), (-0.05,), (0.0,), (0.05,), (0.10,)]
+YULE_DAYS = [("2026-12-21", 0.20), ("2026-12-22", 0.25), ("2026-12-23", 0.30), ("2026-12-24", 0.25)]
+YULE_PRICES = [(32.0,), (28.0,), (24.0,), (20.0,)]
+EVENING = [("evening_share_of_demand", 0.15), ("waiting_share_per_10pct", 0.05), ("croissants_left_at_6pm", 4.0)]
+CARBON_2030 = [("growth_per_year", 0.03), ("years", 4), ("electric_fixed_per_trip_2030", 270),
+               ("charger_trips_per_bank", 20), ("charger_bank_cost_per_week", 1_150)]
+CARBON_2030_STRESS = [("as_planned", 0.03, 0.35, 270), ("hvo_scarce", 0.03, 0.20, 270),
+                      ("lease_not_cut", 0.03, 0.35, 300), ("fast_growth", 0.05, 0.35, 270)]
+
+
+def make_days_68_70():
+    write("price_elasticities.csv", ["category", "elasticity", "std_error"], ELASTICITIES)
+    write("price_ladder.csv", ["price_change"], PRICE_LADDER)
+    write("yule_markdown_days.csv", ["sale_date", "share_of_season_demand"], YULE_DAYS)
+    write("yule_markdown_prices.csv", ["price"], YULE_PRICES)
+    write("evening_markdown.csv", ["setting", "value"], EVENING)
+    write("carbon_2030_settings.csv", ["setting", "value"], CARBON_2030)
+    write("carbon_2030_stress.csv", ["scenario", "growth_per_year", "hvo_max_km_share", "electric_fixed_per_trip"],
+          CARBON_2030_STRESS)
 
 
 if __name__ == "__main__":

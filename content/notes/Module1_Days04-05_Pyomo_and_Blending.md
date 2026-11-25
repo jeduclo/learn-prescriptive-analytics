@@ -576,6 +576,25 @@ data/bakery_oven_log.csv: 780 rows
 data/bakery_robust.csv: 1 rows
 data/mdp_settings.csv: 3 rows
 data/replenishment_scenarios.csv: 4 rows
+data/ev_fleet_options.csv: 3 rows
+data/ev_settings.csv: 12 rows
+data/ev_uncertainties.csv: 6 rows
+data/ev_pilot_signal.csv: 3 rows
+data/northbound_finance.csv: 4 rows
+data/ottawa_growth_scenarios.csv: 3 rows
+data/ev_range_prior.csv: 9 rows
+data/ev_demo_log.csv: 30 rows
+data/fleet_vehicle_types.csv: 3 rows
+data/delivery_frequency.csv: 4 rows
+data/dc_chargers.csv: 3 rows
+data/network_carbon_settings.csv: 5 rows
+data/price_elasticities.csv: 5 rows
+data/price_ladder.csv: 5 rows
+data/yule_markdown_days.csv: 4 rows
+data/yule_markdown_prices.csv: 4 rows
+data/evening_markdown.csv: 3 rows
+data/carbon_2030_settings.csv: 5 rows
+data/carbon_2030_stress.csv: 4 rows
 ```
 
 Later lessons add files to the same script, so your list may be longer than the one above. The first seven files are byte-for-byte the same as before: new data uses its own random stream, so your Days 1–4 results do not change. Rerun `python day01/ladder.py` too: it rewrites `data/forecast_next_week.csv`, which Day 6 needs.

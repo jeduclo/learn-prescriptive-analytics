@@ -54,11 +54,9 @@ con.close()
 │ bakery_products       │      3 │
 │ bakery_range          │     30 │
 │ bakery_range_forecast │     30 │
-│         ·             │      · │
-│         ·             │      · │
-│         ·             │      · │
-│ store_week_actual     │    160 │
-│ store_week_forecast   │    160 │
+│   ·                   │      · │
+│   ·                   │      · │
+│   ·                   │      · │
 │ stores                │     40 │
 │ stress_scenarios      │      6 │
 │ trip_log              │   1872 │
@@ -67,6 +65,8 @@ con.close()
 │ yule_log_economics    │      5 │
 │ yule_log_forecast     │     40 │
 │ yule_log_history      │    118 │
+│ yule_markdown_days    │      4 │
+│ yule_markdown_prices  │      4 │
 └───────────────────────┴────────┘
 ```
 
